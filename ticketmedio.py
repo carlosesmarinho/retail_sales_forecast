@@ -6,8 +6,18 @@ def load_data():
     Carrega os dados dos arquivos CSV.
     Ajuste os caminhos se necessário.
     """
-    train = pd.read_csv("raw_data/train.csv", parse_dates=["date"])
-    transactions = pd.read_csv("raw_data/transactions.csv", parse_dates=["date"])
+    try:
+        train = pd.read_csv("raw_data/train.csv", parse_dates=["date"])
+        transactions = pd.read_csv("raw_data/transactions.csv", parse_dates=["date"])
+    except FileNotFoundError as e:
+        print(f"Erro ao carregar os dados: {e}")
+        raise
+    except pd.errors.EmptyDataError as e:
+        print(f"Arquivo CSV vazio encontrado: {e}")
+        raise
+    except pd.errors.ParserError as e:
+        print(f"Erro ao analisar o arquivo CSV: {e}")
+        raise
     return train, transactions
 
 def merge_data(train, transactions):
